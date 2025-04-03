@@ -24,11 +24,13 @@ class Entidade {
 
 class Personagem extends Entidade {
     #velocidade_y
+    #y
     constructor(x, y, largura, altura, cor) {
         super(x, y, largura, altura, cor);
         this.velocidade_y = 0;
         this.pulando = false;
     }
+    
 
     saltar() {
         this.velocidade_y = -15;
@@ -44,6 +46,22 @@ class Personagem extends Entidade {
                 this.pulando = false;
                 this.velocidade_y = 0;
             }
+        }
+    }
+
+    colisao(parede){
+        if(parede.x < this.x + this.largura && 
+            parede.largura + parede.x > this.x &&
+            this.y < parede.y + parede.altura &&
+            this.y + this.altura > parede.y){
+                this.x = parede.x - 45;
+
+            }
+    }
+
+    loopGame(){
+        if (personagem.x < -50) {
+            gameOver == true
         }
     }
 }
@@ -77,9 +95,8 @@ class Obstaculo extends Entidade {
         }
     }
 
-
-
 class Jogo {
+    static gameOver = false
     constructor() {
         this.loop = this.loop.bind(this);
     }
@@ -90,8 +107,8 @@ class Jogo {
 
     loop() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        quadrado.desenhar();
         personagem.desenhar();
+        personagem.colisao(teste);
         personagem.atualizar();
         teste.desenhar();
         teste.atualizar();
@@ -100,7 +117,6 @@ class Jogo {
 }
 
 // Create entities
-const quadrado = new Entidade(100, 100, 50, 50, 'white');
 const teste = new Obstaculo(800, 250, 70, 400, "black");
 const personagem = new Personagem(150, canvas.height - 45, 45, 45, 'blue');
 const jogo = new Jogo();
