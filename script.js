@@ -25,13 +25,23 @@ class Entidade {
 class Personagem extends Entidade {
     #velocidade_y
     #y
-    constructor(x, y, largura, altura, cor) {
+    constructor(x, y, largura, altura, cor, imagemPath) {
         super(x, y, largura, altura, cor);
         this.velocidade_y = 0;
         this.pulando = false;
+        this.imagem = new Image();
+        this.imagem.src = imagemPath;
     }
     
-
+    desenhar(){
+        ctx.drawImage(
+            this.imagem,
+            this.x,
+            this.y,
+            this.largura,
+            this.altura)
+    }
+    
     saltar() {
         this.velocidade_y = -15;
         this.pulando = true;
@@ -67,15 +77,21 @@ class Personagem extends Entidade {
 }
 
 class Obstaculo extends Entidade {
-    #velocidade_x
-    constructor(x, y, largura, altura, cor) {
+    constructor(x, y, largura, altura, cor, imagemPath) {
         super(x, y, largura, altura, cor);
-        this.velocidade_x = -5;
+        this.velocidade_x = -2;
+        this.imagem = new Image();
+        this.imagem.src = imagemPath;
     }
 
     desenhar() {
-        ctx.fillStyle = this.cor;
-        ctx.fillRect(this.x, this.y, this.largura, this.altura);
+        ctx.drawImage(
+            this.imagem,
+            this.x,
+            this.y,
+            this.largura,
+            this.altura
+        );
     }
 
     setPosition(xP, yP) {
@@ -90,10 +106,45 @@ class Obstaculo extends Entidade {
     atualizar() {
         this.x += this.velocidade_x;
             if (this.x < -100){
-                this.setPosition(800, 250)
+                this.setPosition(2600, 275)
             }
         }
     }
+
+    class Obstaculo_2 extends Entidade {
+        constructor(x, y, largura, altura, cor, imagemPath) {
+            super(x, y, largura, altura, cor);
+            this.velocidade_x = -5;
+            this.imagem = new Image();
+            this.imagem.src = imagemPath;
+        }
+    
+        desenhar() {
+            ctx.drawImage(
+                this.imagem,
+                this.x,
+                this.y,
+                this.largura,
+                this.altura
+            );
+        }
+    
+        setPosition(xP, yP) {
+            this.xP = xP
+            this.yP = yP
+    
+            this.x = xP
+            this.y = yP
+        }
+    
+    
+        atualizar() {
+            this.x += this.velocidade_x;
+                if (this.x < -100){
+                    this.setPosition(2600, 275)
+                }
+            }
+        }
 
 class Jogo {
     static gameOver = false
@@ -108,16 +159,19 @@ class Jogo {
     loop() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         personagem.desenhar();
-        personagem.colisao(teste);
+        personagem.colisao(drogado);
+        personagem.colisao(pedra);
         personagem.atualizar();
-        teste.desenhar();
-        teste.atualizar();
+        drogado.desenhar();
+        drogado.atualizar();
+        pedra.desenhar();
+        pedra.atualizar();
         requestAnimationFrame(this.loop);
     }
 }
 
-// Create entities
-const teste = new Obstaculo(800, 250, 70, 400, "black");
-const personagem = new Personagem(150, canvas.height - 45, 45, 45, 'blue');
+const drogado = new Obstaculo(2600, 275, 75, 125, "black", './Imagem/sprite_mago.png');
+const pedra = new Obstaculo_2(1900, 275, 50, 75, "black", './Imagem/sprite_pedra.png');
+const personagem = new Personagem(150, canvas.height - 45, 45, 45, 'blue','./Imagem/sprite1.png');
 const jogo = new Jogo();
 jogo.loop();
